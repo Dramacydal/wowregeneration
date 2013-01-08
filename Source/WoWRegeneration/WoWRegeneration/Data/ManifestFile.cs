@@ -1,52 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using WoWRegeneration.Repositories;
 
 namespace WoWRegeneration.Data
 {
     public class ManifestFile
     {
-        private const string LOCALE_DETECT_LINE = "serverpath=locale_";
-
-        private List<string> Lines { get; set; }
+        private const string LocaleDetectLine = "serverpath=locale_";
 
         public ManifestFile()
         {
             Lines = new List<string>();
         }
 
-        public List<string> getLocales()
+        private List<string> Lines { get; set; }
+
+        public List<string> GetLocales()
         {
-            List<string> tmp = new List<string>();
-            foreach (string line in Lines)
-            {
-                if (line.StartsWith(LOCALE_DETECT_LINE))
-                {
-                    tmp.Add(line.Replace(LOCALE_DETECT_LINE, ""));
-                }
-            }
-            return tmp;
+            return
+                (from line in Lines where line.StartsWith(LocaleDetectLine) select line.Replace(LocaleDetectLine, ""))
+                    .ToList();
         }
 
         public List<FileObject> GenerateFileList()
         {
-            IWoWRepository repository = RepositoriesManager.getRepositoryByMfil(WoWRegeneration.CurrentSession.MFil);
+            IWoWRepository repository = RepositoriesManager.GetRepositoryByMfil(WoWRegeneration.CurrentSession.MFil);
 
-            List<FileObject> tmp = new List<FileObject>();
+            var tmp = new List<FileObject>();
 
             foreach (string line in Lines)
             {
                 if (IsLineARepositorFile(repository, line))
                 {
-                    FileObject file = new FileObject();
-                    file.Path = getFilePath(line);
+                    var file = new FileObject {Path = GetFilePath(line)};
                     if (file.Path == null)
                         continue;
                     file.Url = line;
-                    file.Info = getFileInfo(repository, line);
+                    file.Info = GetFileInfo(repository, line);
                     if (IsAcceptedFile(repository, file))
                         tmp.Add(file);
                 }
@@ -57,21 +50,23 @@ namespace WoWRegeneration.Data
 
         private bool IsAcceptedFile(IWoWRepository repository, FileObject file)
         {
-            if (WoWRegeneration.CurrentSession.OS == "Win" && file.Filename == "base-OSX.MPQ")
+            if (WoWRegeneration.CurrentSession.Os == "Win" && file.Filename == "base-OSX.MPQ")
                 return false;
 
-            if (WoWRegeneration.CurrentSession.OS == "OSX" && file.Filename == "base-Win.MPQ")
+            if (WoWRegeneration.CurrentSession.Os == "OSX" && file.Filename == "base-Win.MPQ")
                 return false;
 
             if (file.Filename == "alternate.MPQ" && file.Info != WoWRegeneration.CurrentSession.Locale)
                 return false;
 
-            if (WoWRegeneration.CurrentSession.CompletedFiles.Contains(file.Path) && System.IO.File.Exists(Program.ExecutionPath + repository.getDefaultDirectory() + file.Path))
+            if (WoWRegeneration.CurrentSession.CompletedFiles.Contains(file.Path) &&
+                File.Exists(Program.ExecutionPath + repository.GetDefaultDirectory() + file.Path))
             {
                 Program.Log("Skipping " + file.Filename + " allready downloaded", ConsoleColor.DarkGray);
                 return false;
             }
-            else if (WoWRegeneration.CurrentSession.CompletedFiles.Contains(file.Path))
+
+            if (WoWRegeneration.CurrentSession.CompletedFiles.Contains(file.Path))
             {
                 WoWRegeneration.CurrentSession.CompletedFiles.Remove(file.Path);
                 WoWRegeneration.CurrentSession.SaveSession();
@@ -81,18 +76,20 @@ namespace WoWRegeneration.Data
             {
                 return true;
             }
-            else if (file.Directory.StartsWith("Data/Interface/"))
+
+            if (file.Directory.StartsWith("Data/Interface/"))
             {
                 return true;
             }
-            else if (file.Directory.StartsWith("Data/" + WoWRegeneration.CurrentSession.Locale))
+
+            if (file.Directory.StartsWith("Data/" + WoWRegeneration.CurrentSession.Locale))
             {
                 return true;
             }
             return false;
         }
 
-        private string getFilePath(string line)
+        private string GetFilePath(string line)
         {
             int index = Lines.IndexOf(line);
             if (Lines[index + 1].StartsWith("name="))
@@ -102,7 +99,7 @@ namespace WoWRegeneration.Data
             return null;
         }
 
-        private string getFileInfo(IWoWRepository repository, string line)
+        private string GetFileInfo(IWoWRepository repository, string line)
         {
             int index = Lines.IndexOf(line);
             for (int n = 1; n <= 5; n++)
@@ -118,7 +115,7 @@ namespace WoWRegeneration.Data
 
         private bool IsLineARepositorFile(IWoWRepository repository, string line)
         {
-            if (line.StartsWith(repository.getBaseUrl()))
+            if (line.StartsWith(repository.GetBaseUrl()))
             {
                 if (line.Substring(line.Length - 4, 1) == ".")
                 {
@@ -128,19 +125,19 @@ namespace WoWRegeneration.Data
             return false;
         }
 
-        public static ManifestFile FromRepository(Repositories.IWoWRepository repository)
+        public static ManifestFile FromRepository(IWoWRepository repository)
         {
             try
             {
-                ManifestFile manifest = new ManifestFile();
-                WebClient client = new WebClient();
+                var manifest = new ManifestFile();
+                var client = new WebClient();
 
-                string content = client.DownloadString(repository.getBaseUrl() + repository.getMFilName());
+                string content = client.DownloadString(repository.GetBaseUrl() + repository.GetMFilName());
                 string[] lines = content.Split('\n');
 
                 foreach (string line in lines)
                 {
-                    manifest.Lines.Add(line.Trim().Replace("file=", repository.getBaseUrl()));
+                    manifest.Lines.Add(line.Trim().Replace("file=", repository.GetBaseUrl()));
                 }
 
                 return manifest;

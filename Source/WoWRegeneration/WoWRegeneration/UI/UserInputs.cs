@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
+using System.Globalization;
 using WoWRegeneration.Data;
 using WoWRegeneration.Repositories;
 
@@ -10,15 +8,14 @@ namespace WoWRegeneration.UI
 {
     public static class UserInputs
     {
-        
-
         public static IWoWRepository SelectRepository()
         {
             Program.Log("Which version of World of Warcraft you want to restore :");
             Program.Log();
             foreach (IWoWRepository item in RepositoriesManager.Repositories)
             {
-                Program.Log("[" + (RepositoriesManager.Repositories.IndexOf(item) + 1).ToString("00") + "] " + item.getVersionName());
+                Program.Log("[" + (RepositoriesManager.Repositories.IndexOf(item) + 1).ToString("00") + "] " +
+                            item.GetVersionName());
             }
             Program.Log();
             Program.Log("Select version :");
@@ -28,7 +25,7 @@ namespace WoWRegeneration.UI
 
         public static string SelectLocale(ManifestFile manifest)
         {
-            List<string> locales = manifest.getLocales();
+            List<string> locales = manifest.GetLocales();
             Program.Log("Which locale do you want to use :");
             Program.Log();
             foreach (string item in locales)
@@ -41,9 +38,9 @@ namespace WoWRegeneration.UI
             return locales[selectedIndex];
         }
 
-        public static string SelectOS()
+        public static string SelectOs()
         {
-            List<string> os = new List<string>() { "Win", "OSX" };
+            var os = new List<string> {"Win", "OSX"};
             Program.Log("Which OS do you want to use :");
             Program.Log();
             foreach (string item in os)
@@ -56,12 +53,12 @@ namespace WoWRegeneration.UI
             return os[selectedIndex];
         }
 
-        public static bool SelectContinueSession(Data.Session previousSession)
+        public static bool SelectContinueSession(Session previousSession)
         {
             Program.Log("A previous infinished session was found for : ");
             Program.Log("WoW Version : " + previousSession.WoWRepositoryName);
             Program.Log("Locale      : " + previousSession.Locale);
-            Program.Log("OS          : " + previousSession.OS);
+            Program.Log("OS          : " + previousSession.Os);
             Program.Log();
             Program.Log("Do you want to continue this session ? (y/n) :");
             return HandleUserYesNo();
@@ -71,13 +68,18 @@ namespace WoWRegeneration.UI
         {
             while (true)
             {
-                string input = Console.ReadLine().ToLower();
-                if (input != "y" && input != "n")
+                string readLine = Console.ReadLine();
+                if (readLine != null)
                 {
-                    Program.Log("Please enter a correct response 'y' for yes, 'n' for no, try again", ConsoleColor.Red);
-                    continue;
+                    string input = readLine.ToLower();
+                    if (input != "y" && input != "n")
+                    {
+                        Program.Log("Please enter a correct response 'y' for yes, 'n' for no, try again",
+                                    ConsoleColor.Red);
+                        continue;
+                    }
+                    return (input == "y");
                 }
-                return (input == "y");
             }
         }
 
@@ -86,7 +88,7 @@ namespace WoWRegeneration.UI
             while (true)
             {
                 string input = Console.ReadLine();
-                int output = 0;
+                int output;
                 bool result = int.TryParse(input, out output);
                 if (!result)
                 {
@@ -95,7 +97,9 @@ namespace WoWRegeneration.UI
                 }
                 if (!(output >= 1 && output <= max))
                 {
-                    Program.Log("Please enter a number between 1 and " + max.ToString() + ", try again", ConsoleColor.Red);
+                    Program.Log(
+                        "Please enter a number between 1 and " + max.ToString(CultureInfo.InvariantCulture) +
+                        ", try again", ConsoleColor.Red);
                     continue;
                 }
                 return output - 1;

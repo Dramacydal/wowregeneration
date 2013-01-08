@@ -1,30 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
+using System.IO;
 using System.Net;
-using System.Text;
+using System.Threading;
 using WoWRegeneration.Repositories;
+using WoWRegeneration.UI;
 
 namespace WoWRegeneration.Data
 {
     public class FileDownloader
     {
-        private IWoWRepository Repository { get; set; }
+        public FileDownloader(IWoWRepository repository, List<FileObject> files)
+        {
+            Files = files;
+            BasePath = repository.GetDefaultDirectory();
+
+            Progress = new ConsoleDownloadProgressBar(Files.Count);
+        }
+
         private List<FileObject> Files { get; set; }
         private FileObject CurrentFile { get; set; }
         private int CurrentFileIndex { get; set; }
         private string BasePath { get; set; }
 
-        private UI.ConsoleDownloadProgressBar Progress { get; set; }
-
-        public FileDownloader(IWoWRepository repository, List<FileObject> files)
-        {
-            Files = files;
-            BasePath = repository.getDefaultDirectory();
-            
-            Progress = new UI.ConsoleDownloadProgressBar(Files.Count);
-        }
+        private ConsoleDownloadProgressBar Progress { get; set; }
 
         public void Start()
         {
@@ -35,7 +35,7 @@ namespace WoWRegeneration.Data
             Progress.Update(CurrentFile, 0, 0, 0);
             while (CurrentFile != null)
             {
-                System.Threading.Thread.Sleep(100);
+                Thread.Sleep(100);
             }
             Console.Clear();
         }
@@ -49,21 +49,22 @@ namespace WoWRegeneration.Data
             }
             CurrentFile = Files[CurrentFileIndex];
             // Create Directories
-            if (!System.IO.Directory.Exists(BasePath + CurrentFile.Directory))
-                System.IO.Directory.CreateDirectory(BasePath + CurrentFile.Directory);
+            if (!Directory.Exists(BasePath + CurrentFile.Directory))
+                Directory.CreateDirectory(BasePath + CurrentFile.Directory);
             // Delete unfinished downloads
-            if (System.IO.File.Exists(BasePath + CurrentFile.Path))
-                System.IO.File.Delete(BasePath + CurrentFile.Path);
+            if (File.Exists(BasePath + CurrentFile.Path))
+                File.Delete(BasePath + CurrentFile.Path);
 
-            WebClient client = new WebClient();
-            client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressChanged);
-            client.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadFileCompleted);
+            var client = new WebClient();
+            client.DownloadProgressChanged += DownloadProgressChanged;
+            client.DownloadFileCompleted += DownloadFileCompleted;
             client.DownloadFileAsync(new Uri(CurrentFile.Url), BasePath + CurrentFile.Path);
         }
 
         private void DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            Progress.Update(CurrentFile, (float)(Math.Round(((double)e.BytesReceived / (double)e.TotalBytesToReceive) * 100, 2)), e.BytesReceived, e.TotalBytesToReceive);
+            Progress.Update(CurrentFile, (float) (Math.Round((e.BytesReceived/(double) e.TotalBytesToReceive)*100, 2)),
+                            e.BytesReceived, e.TotalBytesToReceive);
         }
 
         private void DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
@@ -76,6 +77,5 @@ namespace WoWRegeneration.Data
             Progress.FileComplete();
             DownloadNextFile();
         }
-
     }
 }

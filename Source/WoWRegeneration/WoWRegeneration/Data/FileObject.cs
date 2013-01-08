@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace WoWRegeneration.Data
+﻿namespace WoWRegeneration.Data
 {
     public class FileObject
     {
@@ -15,18 +10,12 @@ namespace WoWRegeneration.Data
 
         public string Directory
         {
-            get
-            {
-                return Path.Replace(Filename, "");
-            }
+            get { return Path.Replace(Filename, ""); }
         }
 
         public string Filename
         {
-            get
-            {
-                return System.IO.Path.GetFileName(Path);
-            }
+            get { return System.IO.Path.GetFileName(Path); }
         }
 
         public override string ToString()
