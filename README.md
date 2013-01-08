@@ -1,2 +1,4 @@
-wowregeneration
+WOW Regeneration
 ===============
+
+Usage : just run.
