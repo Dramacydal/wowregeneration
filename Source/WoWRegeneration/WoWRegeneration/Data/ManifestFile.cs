@@ -57,9 +57,6 @@ namespace WoWRegeneration.Data
 
         private bool IsAcceptedFile(IWoWRepository repository, FileObject file)
         {
-            if (file.Filename != "base-Win.MPQ" && file.Filename != "DSI_Act1_800.avi")
-                return false;
-
             if (WoWRegeneration.CurrentSession.OS == "Win" && file.Filename == "base-OSX.MPQ")
                 return false;
 
