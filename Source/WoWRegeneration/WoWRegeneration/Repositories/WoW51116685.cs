@@ -1,10 +1,10 @@
 ﻿namespace WoWRegeneration.Repositories
 {
-    class WoW50315890 : IWoWRepository
+    public class WoW51116685 : IWoWRepository
     {
         public string GetVersionName()
         {
-            return "World of Warcraft 5.0.3 (15890)";
+            return "World of Warcraft 5.1.1 (16685)";
         }
 
         public string GetBaseUrl()
@@ -19,7 +19,7 @@
 
         public string GetDefaultDirectory()
         {
-            return "WoW503-15890\\";
+            return "WoW511-16685\\";
         }
     }
 }

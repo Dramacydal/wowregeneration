@@ -47,10 +47,11 @@
     <Compile Include="Data\Session.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\WoW51016357.cs" />
     <Compile Include="Repositories\IWoWRepository.cs" />
     <Compile Include="Repositories\RepositoriesManager.cs" />
     <Compile Include="Repositories\WoW434.cs" />
-    <Compile Include="Repositories\WoW50315890.cs" />
+    <Compile Include="Repositories\WoW51116685.cs" />
     <Compile Include="UI\ConsoleDownloadProgressBar.cs" />
     <Compile Include="UI\UserInputs.cs" />
     <Compile Include="WoWRegeneration.cs" />

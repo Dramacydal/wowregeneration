@@ -4,7 +4,7 @@
     {
         public string GetVersionName()
         {
-            return "World of Warcraft 4.3.4";
+            return "World of Warcraft 4.3.4 (15595)";
         }
 
         public string GetBaseUrl()
