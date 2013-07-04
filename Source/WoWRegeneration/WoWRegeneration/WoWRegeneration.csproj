@@ -50,6 +50,7 @@
     <Compile Include="Repositories\IWoWRepository.cs" />
     <Compile Include="Repositories\RepositoriesManager.cs" />
     <Compile Include="Repositories\WoW434.cs" />
+    <Compile Include="Repositories\WoW50315890.cs" />
     <Compile Include="UI\ConsoleDownloadProgressBar.cs" />
     <Compile Include="UI\UserInputs.cs" />
     <Compile Include="WoWRegeneration.cs" />

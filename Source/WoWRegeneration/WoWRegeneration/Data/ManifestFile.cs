@@ -9,7 +9,11 @@ namespace WoWRegeneration.Data
 {
     public class ManifestFile
     {
-        private const string LocaleDetectLine = "serverpath=locale_";
+        private const string LocaleDetectLineVersion2 = "serverpath=locale_";
+        private const string LocaleDetectLineVersion3 = "tag=";
+        private readonly string[] LocaleDetectLineVersion3IgnoredTags = new[] { "base", "OSX", "Win", "ALT", "EXP1", "EXP2", "EXP3", "EXP4" };
+
+        private int Version { get; set; }
 
         public ManifestFile()
         {
@@ -20,9 +24,29 @@ namespace WoWRegeneration.Data
 
         public List<string> GetLocales()
         {
-            return
-                (from line in Lines where line.StartsWith(LocaleDetectLine) select line.Replace(LocaleDetectLine, ""))
-                    .ToList();
+            if (Version == 2)
+            {
+                return
+                    (from line in Lines where line.StartsWith(LocaleDetectLineVersion2) select line.Replace(LocaleDetectLineVersion2, ""))
+                        .ToList();
+            }
+            if (Version == 3)
+            {
+                var tmp = new List<string>();
+                foreach (string line in Lines)
+                {
+                    if (line.StartsWith(LocaleDetectLineVersion3))
+                    {
+                        string tagValue = line.Replace(LocaleDetectLineVersion3, "");
+                        if (!LocaleDetectLineVersion3IgnoredTags.Contains(tagValue) && !tmp.Contains(tagValue))
+                        {
+                            tmp.Add(tagValue);
+                        }
+                    }
+                }
+                return tmp;
+            }
+            return null;
         }
 
         public List<FileObject> GenerateFileList()
@@ -35,7 +59,7 @@ namespace WoWRegeneration.Data
             {
                 if (IsLineARepositorFile(repository, line))
                 {
-                    var file = new FileObject {Path = GetFilePath(line)};
+                    var file = new FileObject { Path = GetFilePath(line) };
                     if (file.Path == null)
                         continue;
                     file.Url = line;
@@ -133,10 +157,19 @@ namespace WoWRegeneration.Data
                 var client = new WebClient();
 
                 string content = client.DownloadString(repository.GetBaseUrl() + repository.GetMFilName());
+
                 string[] lines = content.Split('\n');
 
                 foreach (string line in lines)
                 {
+                    if (line.Trim().StartsWith("version="))
+                    {
+                        int output;
+                        if (int.TryParse(line.Trim().Replace("version=", ""), out output))
+                        {
+                            manifest.Version = output;
+                        }
+                    }
                     manifest.Lines.Add(line.Trim().Replace("file=", repository.GetBaseUrl()));
                 }
 
