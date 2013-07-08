@@ -42,6 +42,7 @@ namespace WoWRegeneration.Data
 
         public void DownloadNextFile()
         {
+            Console.Clear();
             if (CurrentFileIndex >= Files.Count)
             {
                 CurrentFile = null;
@@ -72,8 +73,6 @@ namespace WoWRegeneration.Data
             WoWRegeneration.CurrentSession.CompletedFiles.Add(CurrentFile.Path);
             WoWRegeneration.CurrentSession.SaveSession();
             CurrentFileIndex = CurrentFileIndex + 1;
-            Console.CursorTop = Console.CursorTop + 7;
-            Console.CursorLeft = 0;
             Progress.FileComplete();
             DownloadNextFile();
         }
