@@ -1,0 +1,12 @@
+This is for ubuntu.
+
+Instal mono : 
+apt-get install mono-runtime
+apt-get install libmono-system-core4.0-cil
+
+On server create a directory to receive WoWRegeneration ( ex : wowregen )
+upload WoWRegeneration.exe to this directory.
+
+type : mono WoWRegeneration.exe 
+
+just use.
