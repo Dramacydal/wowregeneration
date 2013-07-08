@@ -1,6 +1,6 @@
 This is for ubuntu.
 
-Instal mono : 
+Install mono : 
 apt-get install mono-runtime
 apt-get install libmono-system-core4.0-cil
 
