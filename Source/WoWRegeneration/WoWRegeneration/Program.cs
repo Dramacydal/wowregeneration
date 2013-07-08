@@ -57,9 +57,9 @@ namespace WoWRegeneration
             Console.Clear();
             Version version = Assembly.GetEntryAssembly().GetName().Version;
             Console.Title = "WoW Regeneration - " + version;
-            ExecutionPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            if (ExecutionPath != null && !ExecutionPath.EndsWith("\\"))
-                ExecutionPath = ExecutionPath + "\\";
+            ExecutionPath = Environment.CurrentDirectory;
+            if (ExecutionPath != null && !ExecutionPath.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                ExecutionPath = ExecutionPath + Path.DirectorySeparatorChar;
         }
 
         /// <summary>

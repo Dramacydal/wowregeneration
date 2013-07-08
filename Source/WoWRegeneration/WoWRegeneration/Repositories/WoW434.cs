@@ -1,4 +1,6 @@
-﻿namespace WoWRegeneration.Repositories
+﻿using System.IO;
+
+namespace WoWRegeneration.Repositories
 {
     public class WoW434 : IWoWRepository
     {
@@ -19,7 +21,7 @@
 
         public string GetDefaultDirectory()
         {
-            return "WoW434\\";
+            return "WoW434" + Path.DirectorySeparatorChar;
         }
     }
 }
