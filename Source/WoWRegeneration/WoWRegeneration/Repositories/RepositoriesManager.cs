@@ -7,7 +7,7 @@ namespace WoWRegeneration.Repositories
     {
         static RepositoriesManager()
         {
-            Repositories = new List<IWoWRepository> { new WoW434(), new WoW51016357(), new WoW51116685() };
+            Repositories = new List<IWoWRepository> { new WoW434(), new WoW51016357(), new WoW51116685(), new WoW54117538(), new WoW54217956() };
         }
 
         public static List<IWoWRepository> Repositories { get; set; }
