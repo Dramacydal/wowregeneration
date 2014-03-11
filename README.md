@@ -11,7 +11,7 @@ Supported version :
 
 5.4.1 (17538)
 
-5.4.2 (17956)
+5.4.7 (17956)
 
 WoWRegeneration is now compatible with mono (on ubuntu at least) see using-mono.txt
 
