@@ -53,7 +53,7 @@
     <Compile Include="Repositories\WoW434.cs" />
     <Compile Include="Repositories\WoW51116685.cs" />
     <Compile Include="Repositories\WoW54117538.cs" />
-    <Compile Include="Repositories\WoW54217956.cs" />
+    <Compile Include="Repositories\WoW54717956.cs" />
     <Compile Include="UI\ConsoleDownloadProgressBar.cs" />
     <Compile Include="UI\UserInputs.cs" />
     <Compile Include="WoWRegeneration.cs" />
