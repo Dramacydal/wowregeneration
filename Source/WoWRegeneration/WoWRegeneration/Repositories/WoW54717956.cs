@@ -2,26 +2,16 @@
 
 namespace WoWRegeneration.Repositories
 {
-    public class WoW54717956 : IWoWRepository
+    public class WoW54717956 : WoWRepository
     {
-        public string GetVersionName()
-        {
-            return "World of Warcraft 5.4.7 (17956)";
-        }
-
-        public string GetBaseUrl()
+        public override string GetBaseUrl()
         {
             return "http://dist.blizzard.com.edgesuite.net/wow-pod-retail/EU/15890.direct/";
         }
 
-        public string GetMFilName()
+        public override string GetMFilName()
         {
             return "wow-17956-C7A0B02EAC7E9E577A22EDAEBE7B75B3.mfil";
-        }
-
-        public string GetDefaultDirectory()
-        {
-            return "WoW547-17956" + Path.DirectorySeparatorChar;
         }
     }
 }

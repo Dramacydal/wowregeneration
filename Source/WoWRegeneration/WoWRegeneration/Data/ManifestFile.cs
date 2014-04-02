@@ -51,7 +51,7 @@ namespace WoWRegeneration.Data
 
         public List<FileObject> GenerateFileList()
         {
-            IWoWRepository repository = RepositoriesManager.GetRepositoryByMfil(WoWRegeneration.CurrentSession.MFil);
+            WoWRepository repository = RepositoriesManager.GetRepositoryByMfil(WoWRegeneration.CurrentSession.MFil);
 
             var tmp = new List<FileObject>();
 
@@ -72,7 +72,7 @@ namespace WoWRegeneration.Data
             return tmp;
         }
 
-        private bool IsAcceptedFile(IWoWRepository repository, FileObject file)
+        private bool IsAcceptedFile(WoWRepository repository, FileObject file)
         {
             if (WoWRegeneration.CurrentSession.Os == "Win" && file.Filename == "base-OSX.MPQ")
                 return false;
@@ -123,7 +123,7 @@ namespace WoWRegeneration.Data
             return null;
         }
 
-        private string GetFileInfo(IWoWRepository repository, string line)
+        private string GetFileInfo(WoWRepository repository, string line)
         {
             int index = Lines.IndexOf(line);
             for (int n = 1; n <= 5; n++)
@@ -137,7 +137,7 @@ namespace WoWRegeneration.Data
             return null;
         }
 
-        private bool IsLineARepositorFile(IWoWRepository repository, string line)
+        private bool IsLineARepositorFile(WoWRepository repository, string line)
         {
             if (line.StartsWith(repository.GetBaseUrl()))
             {
@@ -149,7 +149,7 @@ namespace WoWRegeneration.Data
             return false;
         }
 
-        public static ManifestFile FromRepository(IWoWRepository repository)
+        public static ManifestFile FromRepository(WoWRepository repository)
         {
             try
             {

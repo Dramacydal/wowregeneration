@@ -23,7 +23,7 @@ namespace WoWRegeneration.Data
             MFil = mfil;
             Locale = locale;
             Os = os;
-            IWoWRepository rep = RepositoriesManager.GetRepositoryByMfil(mfil);
+            WoWRepository rep = RepositoriesManager.GetRepositoryByMfil(mfil);
             if (rep == null)
                 throw new Exception("Unknow mfil file");
             WoWRepositoryName = rep.GetVersionName();

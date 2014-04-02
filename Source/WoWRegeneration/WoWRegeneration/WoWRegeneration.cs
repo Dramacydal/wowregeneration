@@ -33,7 +33,7 @@ namespace WoWRegeneration
 
         private static void EntryPointNewSession()
         {
-            IWoWRepository repository = UserInputs.SelectRepository();
+            WoWRepository repository = UserInputs.SelectRepository();
             ManifestFile manifest = ManifestFile.FromRepository(repository);
             string locale = UserInputs.SelectLocale(manifest);
             string os = UserInputs.SelectOs();
@@ -48,7 +48,7 @@ namespace WoWRegeneration
         {
             CurrentSession = previousSession;
 
-            IWoWRepository repository = RepositoriesManager.GetRepositoryByMfil(CurrentSession.MFil);
+            WoWRepository repository = RepositoriesManager.GetRepositoryByMfil(CurrentSession.MFil);
             ManifestFile manifest = ManifestFile.FromRepository(repository);
 
             CurrentSession.SaveSession();
@@ -59,7 +59,7 @@ namespace WoWRegeneration
         private static void StartProcess(ManifestFile manifest)
         {
             Program.Log("Generating file list");
-            IWoWRepository repository = RepositoriesManager.GetRepositoryByMfil(CurrentSession.MFil);
+            WoWRepository repository = RepositoriesManager.GetRepositoryByMfil(CurrentSession.MFil);
             List<FileObject> files = manifest.GenerateFileList();
 
             var downloader = new FileDownloader(repository, files);

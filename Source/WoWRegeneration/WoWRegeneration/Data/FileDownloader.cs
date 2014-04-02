@@ -11,7 +11,7 @@ namespace WoWRegeneration.Data
 {
     public class FileDownloader
     {
-        public FileDownloader(IWoWRepository repository, List<FileObject> files)
+        public FileDownloader(WoWRepository repository, List<FileObject> files)
         {
             Files = files;
             BasePath = repository.GetDefaultDirectory();

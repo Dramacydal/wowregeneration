@@ -8,11 +8,11 @@ namespace WoWRegeneration.UI
 {
     public static class UserInputs
     {
-        public static IWoWRepository SelectRepository()
+        public static WoWRepository SelectRepository()
         {
             Program.Log("Which version of World of Warcraft you want to restore :");
             Program.Log();
-            foreach (IWoWRepository item in RepositoriesManager.Repositories)
+            foreach (WoWRepository item in RepositoriesManager.Repositories)
             {
                 Program.Log("[" + (RepositoriesManager.Repositories.IndexOf(item) + 1).ToString("00") + "] " +
                             item.GetVersionName());
